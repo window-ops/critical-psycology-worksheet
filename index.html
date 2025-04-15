@@ -211,7 +211,11 @@
           const tdText = document.createElement('td');
           tdText.style.padding = '0.5rem';
           tdText.style.border = '1px solid #ddd';
-          tdText.textContent = text;
+          if (parseInt(tdStep.textContent, 10) > 1) {
+            tdText.textContent = 'Why? ' + text;
+          } else {
+            tdText.textContent = text;
+          }
           tr.appendChild(tdStep);
           tr.appendChild(tdText);
           analysisTableBody.appendChild(tr);
