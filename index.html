@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Critical Psychology Worksheet</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 1000px;
+        margin: 1rem auto;
+        padding: 1rem;
+        background: #f9f9f9;
+        color: #222;
+      }
+
+      h1,
+      h2 {
+        text-align: center;
+        color: #2c3e50;
+      }
+
+      h3 {
+        color: #34495e;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 0.3rem;
+      }
+
+      section.example {
+        background: #fff;
+        border-radius: 6px;
+        padding: 1rem 1.5rem 1.5rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 0.5rem;
+        margin-bottom: 1rem;
+      }
+
+      table th,
+      table td {
+        border: 1px solid #ddd;
+        padding: 0.5rem 0.75rem;
+        vertical-align: top;
+        text-align: left;
+      }
+
+      table th {
+        background-color: #3498db;
+        color: white;
+        width: 5%;
+      }
+
+      .solution {
+        font-weight: bold;
+        background-color: #eaf2f8;
+        padding: 0.5rem 0.75rem;
+        border-left: 4px solid #3498db;
+      }
+
+      footer {
+        text-align: center;
+        margin-top: 2rem;
+        font-size: 0.9rem;
+        color: #777;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 style="margin-top: 0;">Critical Psychology Worksheet</h1>
+    <p style="text-align: center; font-style: italic; max-width: 700px; margin: 0 auto 1rem auto;"> Tracing Personal Thoughts to Systemic Causes: A Step-by-Step Guided Analysis</p>
+    <section>
+      <h2>What is Critical Psychology?</h2>
+      <p><strong>Critical Psychology</strong> is an approach that goes beyond individual thoughts and behaviors to examine how social, economic, and political systems shape personal experiences, emotions, and mental health. It challenges traditional psychology by exploring the root causes of distress in power structures, inequality, and systemic oppression.</p>
+      <p>Unlike conventional therapies like <strong>Cognitive Behavioral Therapy (CBT)</strong>, which focus on identifying and reframing negative thoughts on an individual level (e.g., “Change your thought to feel better”), Critical Psychology asks deeper questions such as:</p>
+      <ul>
+        <li>Why do these thoughts arise in the first place?</li>
+        <li>What social or economic systems might be responsible for creating and maintaining these thoughts or feelings?</li>
+        <li>How do societal norms, cultural values, and economic pressures influence individual mental health?</li>
+      </ul>
+      <p>By uncovering these systemic roots, Critical Psychology seeks not only personal healing but also social change. It encourages individuals to develop critical awareness of the world around them and to challenge the conditions that cause psychological distress.</p>
+    </section>
+    <section>
+      <h2>Instructions</h2>
+      <p>For each example, we start with a personal thought or feeling (e.g., anxiety, fear, negative self-belief). Then we follow the “Why?” chain step-by-step to uncover the deeper social, economic, or political roots of that thought. Finally, we identify possible systemic solutions.</p>
+    </section>
+    <section id="example0" class="example">
+      <h3>Example 0: Your Personal Critical Psychology Analysis</h3>
+      <p>Try applying the method to a personal thought or feeling. Start by writing the initial thought, then ask “Why?” to explore deeper social or systemic causes. You can add up to 6 "Why?" steps. Finally, propose possible solutions addressing root causes.</p>
+      <form id="criticalForm">
+        <label for="step0" style="font-weight: bold;">Step 1: Write your initial thought or feeling</label>
+        <br>
+        <textarea id="step0" rows="2" placeholder="Example: I feel anxious about my job..."></textarea>
+        <br>
+        <div id="stepsContainer">
+          <!-- Additional steps will appear here -->
+        </div>
+        <button type="button" id="addStepBtn">Add Why step</button>
+        <br>
+        <br>
+        <label for="solution" style="font-weight: bold;">Your proposed solution</label>
+        <br>
+        <textarea id="solution" rows="3" placeholder="Example: Advocate for fair labor policies..."></textarea>
+        <br>
+        <button type="button" onclick="displayAnalysis()">Show My Analysis</button>
+      </form>
+      <section id="result" style="display: none; margin-top: 1rem; background: #eaf2f8; border-left: 6px solid #3498db; padding: 1rem; border-radius: 4px;">
+        <h4 style="margin-top: 0">Your Critical Psychology Analysis</h4>
+        <table id="analysisTable" style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+          <thead>
+            <tr style="background: #3498db; color: #fff;">
+              <th style="width: 5%; padding: 0.5rem; border: 1px solid #ddd;">Step</th>
+              <th style="padding: 0.5rem; border: 1px solid #ddd;">Analysis</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Filled dynamically -->
+          </tbody>
+        </table>
+        <p style="margin-top: 1rem; margin-bottom: 0">
+          <strong>Proposed Solution:</strong>
+          <span id="solutionText"></span>
+        </p>
+      </section>
+    </section>
+    <script>
+      const stepsContainer = document.getElementById('stepsContainer');
+      const addStepBtn = document.getElementById('addStepBtn');
+      let stepCount = 0;
+      const maxSteps = 5;
+
+      function createStepElement(stepNumber) {
+        const stepDiv = document.createElement('div');
+        stepDiv.className = 'why-step';
+        stepDiv.style.marginBottom = "1rem";
+        stepDiv.id = `stepDiv${stepNumber}`;
+        stepDiv.innerHTML = `<label for="step${stepNumber}" style="font-weight: bold;">Step ${stepNumber + 1}: Why?</label><br/><textarea id="step${stepNumber}" rows="2" placeholder="Explain why step ${stepNumber} occurs..."></textarea><button type="button" style="width: 8%; margin-left: 0;" title="Delete this step" aria-label="Delete step ${stepNumber + 1}">&times;</button>`;
+        const deleteBtn = stepDiv.querySelector('button');
+        deleteBtn.addEventListener('click', () => {
+          stepsContainer.removeChild(stepDiv);
+          stepCount--;
+          relabelSteps();
+          if (stepCount < maxSteps) {
+            addStepBtn.disabled = false;
+            addStepBtn.textContent = "Add Why step";
+          }
+        });
+        return stepDiv;
+      }
+      addStepBtn.addEventListener('click', () => {
+        if (stepCount < maxSteps) {
+          const newStep = createStepElement(stepCount + 1);
+          stepsContainer.appendChild(newStep);
+          stepCount++;
+          if (stepCount === maxSteps) {
+            addStepBtn.disabled = true;
+            addStepBtn.textContent = 'Maximum steps reached';
+          }
+        }
+      });
+
+      function relabelSteps() {
+        const stepDivs = stepsContainer.querySelectorAll('.why-step');
+        stepDivs.forEach((div, index) => {
+          div.id = `stepDiv${index + 1}`;
+          const label = div.querySelector('label');
+          const textarea = div.querySelector('textarea');
+          const button = div.querySelector('button');
+          label.setAttribute('for', `step${index + 1}`);
+          label.textContent = `Step ${index + 2}: Why?`;
+          textarea.id = `step${index + 1}`;
+          textarea.placeholder = `Explain why step ${index + 1} occurs...`;
+          button.setAttribute('aria-label', `Delete step ${index + 2}`);
+        });
+      }
+
+      function displayAnalysis() {
+        const analysisTableBody = document.querySelector('#analysisTable tbody');
+        const solutionText = document.getElementById('solutionText');
+        const resultSection = document.getElementById('result');
+        analysisTableBody.innerHTML = '';
+        const steps = [];
+        const step0 = document.getElementById('step0').value.trim();
+        if (!step0) {
+          alert('Please enter your initial thought or feeling in Step 1.');
+          return;
+        }
+        steps.push(step0);
+        const stepDivs = stepsContainer.querySelectorAll('.why-step');
+        for (let i = 0; i < stepDivs.length; i++) {
+          const txt = stepDivs[i].querySelector('textarea').value.trim();
+          if (!txt) {
+            alert(`Please complete Step ${i + 2} or delete it.`);
+            return;
+          }
+          steps.push(txt);
+        }
+        // Fill table rows
+        steps.forEach((text, index) => {
+          const tr = document.createElement('tr');
+          tr.style.border = "1px solid #ddd";
+          const tdStep = document.createElement('td');
+          tdStep.style.padding = '0.5rem';
+          tdStep.style.border = '1px solid #ddd';
+          tdStep.style.textAlign = 'center';
+          tdStep.textContent = index + 1;
+          const tdText = document.createElement('td');
+          tdText.style.padding = '0.5rem';
+          tdText.style.border = '1px solid #ddd';
+          tdText.textContent = text;
+          tr.appendChild(tdStep);
+          tr.appendChild(tdText);
+          analysisTableBody.appendChild(tr);
+        });
+        // Show solution
+        const solutionInput = document.getElementById('solution').value.trim();
+        solutionText.textContent = solutionInput || "[No solution entered]";
+        // Show result
+        resultSection.style.display = 'block';
+        resultSection.scrollIntoView({
+          behavior: "smooth"
+        });
+      }
+    </script>
+    <style>
+      #example0 textarea {
+        width: 97%;
+        min-height: 3.5rem;
+        font-size: 1rem;
+        padding: 0.5rem 0.75rem;
+        border: 1.5px solid #ccc;
+        border-radius: 6px;
+        box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        font-family: inherit;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        resize: vertical;
+        outline-offset: 2px;
+        margin-top: 0.25rem;
+        margin-bottom: 0.5rem;
+      }
+
+      #example0 textarea:focus {
+        border-color: #3498db;
+        box-shadow: 0 0 5px rgba(52, 152, 219, 0.6);
+        outline: none;
+      }
+
+      #example0 #step0 {
+        min-height: 4rem;
+        font-weight: 600;
+      }
+
+      #example0 .why-step textarea {
+        min-height: 3rem;
+      }
+
+      #example0 #solution {
+        min-height: 5rem;
+      }
+
+      #example0 button {
+        background-color: #3498db;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 2px 5px rgba(52, 152, 219, 0.4);
+        user-select: none;
+      }
+
+      #example0 button:hover:not(:disabled) {
+        background-color: #2980b9;
+        box-shadow: 0 4px 12px rgba(41, 128, 185, 0.6);
+      }
+
+      #example0 button:disabled {
+        background-color: #95a5a6;
+        cursor: not-allowed;
+        box-shadow: none;
+        color: #ecf0f1;
+      }
+
+      #example0 .why-step button {
+        background-color: #e74c3c;
+        color: white;
+        width: 2rem;
+        height: 2rem;
+        font-size: 1.3rem;
+        font-weight: bold;
+        padding: 0;
+        border-radius: 10px;
+        box-shadow: 0 2px 6px rgba(231, 76, 60, 0.6);
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        vertical-align: top;
+        margin-left: 1rem;
+      }
+
+      #example0 .why-step button:hover {
+        background-color: #c0392b;
+        box-shadow: 0 4px 12px rgba(192, 57, 43, 0.8);
+      }
+    </style>
+    <section class="example" id="example1">
+      <h3>Example 1: Anxiety About Beauty Standards</h3>
+      <table>
+        <tr>
+          <th>Step</th>
+          <th>Analysis</th>
+        </tr>
+        <tr>
+          <td>1.</td>
+          <td>I believe I don’t look good.</td>
+        </tr>
+        <tr>
+          <td>2.</td>
+          <td>Why? Because I fear people will hate me for it.</td>
+        </tr>
+        <tr>
+          <td>3.</td>
+          <td>Why? Because of prevailing beauty standards.</td>
+        </tr>
+        <tr>
+          <td>4.</td>
+          <td>Why? Because beauty standards are socially constructed.</td>
+        </tr>
+        <tr>
+          <td>5.</td>
+          <td>Why? Because the economic system profits from beauty industries.</td>
+        </tr>
+        <tr>
+          <td>6.</td>
+          <td>Why? Because capitalism exploits insecurities to maximize profit.</td>
+        </tr>
+      </table>
+      <div class="solution">
+        <strong>Solution:</strong> Challenge beauty norms, support media diversity, address capitalist exploitation of insecurities.
+      </div>
+    </section>
+    <section class="example" id="example2">
+      <h3>Example 2: Fear of Missing a Work Deadline</h3>
+      <table>
+        <tr>
+          <th>Step</th>
+          <th>Analysis</th>
+        </tr>
+        <tr>
+          <td>1.</td>
+          <td>I fear missing my work deadline.</td>
+        </tr>
+        <tr>
+          <td>2.</td>
+          <td>Why? Because I might get fired.</td>
+        </tr>
+        <tr>
+          <td>3.</td>
+          <td>Why? Because working conditions are strict and inflexible.</td>
+        </tr>
+        <tr>
+          <td>4.</td>
+          <td>Why? Because company culture demands relentless productivity.</td>
+        </tr>
+        <tr>
+          <td>5.</td>
+          <td>Why? Because companies maximize profit through overwork.</td>
+        </tr>
+        <tr>
+          <td>6.</td>
+          <td>Why? Because the economic system demands infinite growth.</td>
+        </tr>
+      </table>
+      <div class="solution">
+        <strong>Solution:</strong> Advocate fair labor practices, support worker rights, rethink infinite growth capitalist models.
+      </div>
+    </section>
+    <section class="example" id="example3">
+      <h3>Example 3: Anxiety Over National Test</h3>
+      <table>
+        <tr>
+          <th>Step</th>
+          <th>Analysis</th>
+        </tr>
+        <tr>
+          <td>1.</td>
+          <td>I am anxious about failing the national test.</td>
+        </tr>
+        <tr>
+          <td>2.</td>
+          <td>Why? Because low grades block my school admission.</td>
+        </tr>
+        <tr>
+          <td>3.</td>
+          <td>Why? Because schools rely on a meritocratic admission system.</td>
+        </tr>
+        <tr>
+          <td>4.</td>
+          <td>Why? Because the system segregates students by ability and social class.</td>
+        </tr>
+        <tr>
+          <td>5.</td>
+          <td>Why? Because society requires stratified labor roles.</td>
+        </tr>
+        <tr>
+          <td>6.</td>
+          <td>Why? Because the economy prioritizes cheap, exploitable labor.</td>
+        </tr>
+      </table>
+      <div class="solution">
+        <strong>Solution:</strong> Create fair education, automate labor, dismantle exploitative stratification.
+      </div>
+    </section>
+    <section class="example" id="example4">
+      <h3>Example 4: Feeling Inadequate at Work</h3>
+      <table>
+        <tr>
+          <th>Step</th>
+          <th>Analysis</th>
+        </tr>
+        <tr>
+          <td>1.</td>
+          <td>I feel inadequate because I can’t meet all my job demands.</td>
+        </tr>
+        <tr>
+          <td>2.</td>
+          <td>Why? Because expectations are unrealistically high.</td>
+        </tr>
+        <tr>
+          <td>3.</td>
+          <td>Why? Because management pushes for constant productivity.</td>
+        </tr>
+        <tr>
+          <td>4.</td>
+          <td>Why? Because profit motives prioritize output over wellbeing.</td>
+        </tr>
+        <tr>
+          <td>5.</td>
+          <td>Why? Because capitalism values growth over human health.</td>
+        </tr>
+      </table>
+      <div class="solution">
+        <strong>Solution:</strong> Promote workplace balance, question profit-first culture, support labor rights.
+      </div>
+    </section>
+    <section class="example" id="example5">
+      <h3>Example 5: Feeling Unworthy Due to Financial Struggles</h3>
+      <table>
+        <tr>
+          <th>Step</th>
+          <th>Analysis</th>
+        </tr>
+        <tr>
+          <td>1.</td>
+          <td>I feel unworthy because I struggle to pay bills.</td>
+        </tr>
+        <tr>
+          <td>2.</td>
+          <td>Why? Because I don’t earn enough money.</td>
+        </tr>
+        <tr>
+          <td>3.</td>
+          <td>Why? Because wages are low in my industry.</td>
+        </tr>
+        <tr>
+          <td>4.</td>
+          <td>Why? Because labor is undervalued in a competitive market.</td>
+        </tr>
+        <tr>
+          <td>5.</td>
+          <td>Why? Because capitalism suppresses wages to maximize profits.</td>
+        </tr>
+      </table>
+      <div class="solution">
+        <strong>Solution:</strong> Advocate for living wages, challenge economic inequality, support worker cooperatives.
+      </div>
+    </section>
+    <section class="example" id="example6">
+      <h3>Example 6: Feeling Stressed About Parenting</h3>
+      <table>
+        <tr>
+          <th>Step</th>
+          <th>Analysis</th>
+        </tr>
+        <tr>
+          <td>1.</td>
+          <td>I feel stressed as a parent managing work and childcare.</td>
+        </tr>
+        <tr>
+          <td>2.</td>
+          <td>Why? Because I lack sufficient paid parental leave.</td>
+        </tr>
+        <tr>
+          <td>3.</td>
+          <td>Why? Because workplace policies don’t support family needs.</td>
+        </tr>
+        <tr>
+          <td>4.</td>
+          <td>Why? Because companies prioritize profit over employee wellbeing.</td>
+        </tr>
+        <tr>
+          <td>5.</td>
+          <td>Why? Because the economic system values labor over care work.</td>
+        </tr>
+      </table>
+      <div class="solution">
+        <strong>Solution:</strong> Fight for family-friendly policies, challenge capitalist undervaluing of care.
+      </div>
+    </section>
+    <section class="example" id="example7">
+      <h3>Example 7: Feeling Hopeless About Climate Change</h3>
+      <table>
+        <tr>
+          <th>Step</th>
+          <th>Analysis</th>
+        </tr>
+        <tr>
+          <td>1.</td>
+          <td>I feel hopeless about climate change.</td>
+        </tr>
+        <tr>
+          <td>2.</td>
+          <td>Why? Because governments fail to act effectively.</td>
+        </tr>
+        <tr>
+          <td>3.</td>
+          <td>Why? Because corporations influence political decisions.</td>
+        </tr>
+        <tr>
+          <td>4.</td>
+          <td>Why? Because the economic system prioritizes profit over environment.</td>
+        </tr>
+        <tr>
+          <td>5.</td>
+          <td>Why? Because endless economic growth is unsustainable.</td>
+        </tr>
+      </table>
+      <div class="solution">
+        <strong>Solution:</strong> Support systemic environmental reform, challenge capitalist growth models.
+      </div>
+    </section>
+    <section class="example" id="example8">
+      <h3>Example 8: Feeling Discriminated Against at School</h3>
+      <table>
+        <tr>
+          <th>Step</th>
+          <th>Analysis</th>
+        </tr>
+        <tr>
+          <td>1.</td>
+          <td>I feel discriminated against because of my ethnicity.</td>
+        </tr>
+        <tr>
+          <td>2.</td>
+          <td>Why? Because of biased attitudes from teachers and peers.</td>
+        </tr>
+        <tr>
+          <td>3.</td>
+          <td>Why? Because of institutional racism in the education system.</td>
+        </tr>
+        <tr>
+          <td>4.</td>
+          <td>Why? Because society sustains racial inequalities.</td>
+        </tr>
+        <tr>
+          <td>5.</td>
+          <td>Why? Because systemic racism is embedded in social and economic structures.</td>
+        </tr>
+      </table>
+      <div class="solution">
+        <strong>Solution:</strong> Promote anti-racist education, dismantle systemic inequalities.
+      </div>
+    </section>
+    <section class="example" id="example9">
+      <h3>Example 9: Feeling Isolated During Pandemic Lockdown</h3>
+      <table>
+        <tr>
+          <th>Step</th>
+          <th>Analysis</th>
+        </tr>
+        <tr>
+          <td>1.</td>
+          <td>I feel isolated and lonely during lockdown.</td>
+        </tr>
+        <tr>
+          <td>2.</td>
+          <td>Why? Because social distancing limits contact.</td>
+        </tr>
+        <tr>
+          <td>3.</td>
+          <td>Why? Because government policies restrict interactions.</td>
+        </tr>
+        <tr>
+          <td>4.</td>
+          <td>Why? Because public health prioritizes controlling viral spread.</td>
+        </tr>
+        <tr>
+          <td>5.</td>
+          <td>Why? Because the economic system failed to prepare adequate healthcare infrastructure.</td>
+        </tr>
+      </table>
+      <div class="solution">
+        <strong>Solution:</strong> Advocate for robust public health, social supports, and systemic preparedness.
+      </div>
+    </section>
+    <section class="example" id="example10">
+      <h3>Example 10: Feeling Anxious About Social Media Appearance</h3>
+      <table>
+        <tr>
+          <th>Step</th>
+          <th>Analysis</th>
+        </tr>
+        <tr>
+          <td>1.</td>
+          <td>I feel anxious about how I appear on social media.</td>
+        </tr>
+        <tr>
+          <td>2.</td>
+          <td>Why? Because I compare myself to others.</td>
+        </tr>
+        <tr>
+          <td>3.</td>
+          <td>Why? Because social media promotes idealized lifestyles.</td>
+        </tr>
+        <tr>
+          <td>4.</td>
+          <td>Why? Because platforms profit by driving engagement through comparison.</td>
+        </tr>
+        <tr>
+          <td>5.</td>
+          <td>Why? Because capitalism monetizes personal insecurities.</td>
+        </tr>
+      </table>
+      <div class="solution">
+        <strong>Solution:</strong> Promote media literacy, regulate social platforms, resist consumerist pressures.
+      </div>
+    </section>
+    <section class="example" id="example11">
+      <h3>Example 11: Feeling Overwhelmed by Social Expectations</h3>
+      <table>
+        <tr>
+          <th>Step</th>
+          <th>Analysis</th>
+        </tr>
+        <tr>
+          <td>1.</td>
+          <td>I feel overwhelmed trying to meet social expectations.</td>
+        </tr>
+        <tr>
+          <td>2.</td>
+          <td>Why? Because I’m expected to be successful, attractive, and social.</td>
+        </tr>
+        <tr>
+          <td>3.</td>
+          <td>Why? Because media promotes idealized life standards.</td>
+        </tr>
+        <tr>
+          <td>4.</td>
+          <td>Why? Because consumer culture monetizes these ideals.</td>
+        </tr>
+        <tr>
+          <td>5.</td>
+          <td>Why? Because capitalism thrives on creating constant desire and dissatisfaction.</td>
+        </tr>
+      </table>
+      <div class="solution">
+        <strong>Solution:</strong> Promote critical media literacy, resist consumerist pressures, and normalize diverse life values.
+      </div>
+    </section>
+    <section class="example" id="example12">
+      <h3>Example 12: Feeling Guilty About Taking Time Off Work</h3>
+      <table>
+        <tr>
+          <th>Step</th>
+          <th>Analysis</th>
+        </tr>
+        <tr>
+          <td>1.</td>
+          <td>I feel guilty taking time off work.</td>
+        </tr>
+        <tr>
+          <td>2.</td>
+          <td>Why? Because I fear being seen as lazy or replaceable.</td>
+        </tr>
+        <tr>
+          <td>3.</td>
+          <td>Why? Because workplace culture rewards constant availability.</td>
+        </tr>
+        <tr>
+          <td>4.</td>
+          <td>Why? Because companies seek to maximize profit through exploitation.</td>
+        </tr>
+        <tr>
+          <td>5.</td>
+          <td>Why? Because the economic system values labor output above worker wellbeing.</td>
+        </tr>
+      </table>
+      <div class="solution">
+        <strong>Solution:</strong> Advocate for labor rights, enforce fair work policies, and promote healthy work-life balance.
+      </div>
+    </section>
+    <section class="example" id="example13">
+      <h3>Example 13: Feeling Discouraged About Activism Impact</h3>
+      <table>
+        <tr>
+          <th>Step</th>
+          <th>Analysis</th>
+        </tr>
+        <tr>
+          <td>1.</td>
+          <td>I feel discouraged that my activism won’t create change.</td>
+        </tr>
+        <tr>
+          <td>2.</td>
+          <td>Why? Because powerful institutions resist reform.</td>
+        </tr>
+        <tr>
+          <td>3.</td>
+          <td>Why? Because they protect their own economic and political interests.</td>
+        </tr>
+        <tr>
+          <td>4.</td>
+          <td>Why? Because current systems prioritize maintaining status quo.</td>
+        </tr>
+        <tr>
+          <td>5.</td>
+          <td>Why? Because capitalism incentivizes control over resources and people.</td>
+        </tr>
+      </table>
+      <div class="solution">
+        <strong>Solution:</strong> Build collective movements, challenge power structures, and foster long-term systemic change.
+      </div>
+    </section>
+    <section class="example" id="example14">
+      <h3>Example 14: Feeling Anxious About Healthcare Access</h3>
+      <table>
+        <tr>
+          <th>Step</th>
+          <th>Analysis</th>
+        </tr>
+        <tr>
+          <td>1.</td>
+          <td>I feel anxious about affording healthcare.</td>
+        </tr>
+        <tr>
+          <td>2.</td>
+          <td>Why? Because medical costs are high.</td>
+        </tr>
+        <tr>
+          <td>3.</td>
+          <td>Why? Because healthcare is privatized.</td>
+        </tr>
+        <tr>
+          <td>4.</td>
+          <td>Why? Because profit-driven healthcare companies dominate.</td>
+        </tr>
+        <tr>
+          <td>5.</td>
+          <td>Why? Because the economic system treats health as a commodity.</td>
+        </tr>
+      </table>
+      <div class="solution">
+        <strong>Solution:</strong> Support universal healthcare, challenge healthcare privatization, and advocate for health as a human right.
+      </div>
+    </section>
+    <section class="example" id="example15">
+      <h3>Example 15: Feeling Alienated at University</h3>
+      <table>
+        <tr>
+          <th>Step</th>
+          <th>Analysis</th>
+        </tr>
+        <tr>
+          <td>1.</td>
+          <td>I feel alienated and disconnected at university.</td>
+        </tr>
+        <tr>
+          <td>2.</td>
+          <td>Why? Because I don’t relate to dominant campus culture.</td>
+        </tr>
+        <tr>
+          <td>3.</td>
+          <td>Why? Because curriculum and policies reflect privileged groups.</td>
+        </tr>
+        <tr>
+          <td>4.</td>
+          <td>Why? Because higher education serves to reproduce social hierarchies.</td>
+        </tr>
+        <tr>
+          <td>5.</td>
+          <td>Why? Because education systems uphold economic and cultural power structures.</td>
+        </tr>
+      </table>
+      <div class="solution">
+        <strong>Solution:</strong> Push for inclusive curricula, support marginalized student groups, and democratize education.
+      </div>
+    </section>
+    <section class="example" id="example16">
+      <h3>Example 16: Feeling Burnout in Freelance Gig Economy Work</h3>
+      <table>
+        <tr>
+          <th>Step</th>
+          <th>Analysis</th>
+        </tr>
+        <tr>
+          <td>1.</td>
+          <td>I feel burned out working multiple gigs.</td>
+        </tr>
+        <tr>
+          <td>2.</td>
+          <td>Why? Because work is unpredictable and underpaid.</td>
+        </tr>
+        <tr>
+          <td>3.</td>
+          <td>Why? Because gig economy lacks labor protections.</td>
+        </tr>
+        <tr>
+          <td>4.</td>
+          <td>Why? Because companies offload risks to workers.</td>
+        </tr>
+        <tr>
+          <td>5.</td>
+          <td>Why? Because the capitalist system prioritizes flexible, cheap labor.</td>
+        </tr>
+      </table>
+      <div class="solution">
+        <strong>Solution:</strong> Advocate for gig worker rights, strengthen labor laws, and promote sustainable work models.
+      </div>
+    </section>
+    <section class="example" id="example17">
+      <h3>Example 17: Feeling Anxious About Immigration Status</h3>
+      <table>
+        <tr>
+          <th>Step</th>
+          <th>Analysis</th>
+        </tr>
+        <tr>
+          <td>1.</td>
+          <td>I feel anxious about my immigration status.</td>
+        </tr>
+        <tr>
+          <td>2.</td>
+          <td>Why? Because I fear detention or deportation.</td>
+        </tr>
+        <tr>
+          <td>3.</td>
+          <td>Why? Because immigration policies are harsh and punitive.</td>
+        </tr>
+        <tr>
+          <td>4.</td>
+          <td>Why? Because nation-states control borders to regulate labor markets.</td>
+        </tr>
+        <tr>
+          <td>5.</td>
+          <td>Why? Because economic systems depend on controlled, exploitable labor flows.</td>
+        </tr>
+      </table>
+      <div class="solution">
+        <strong>Solution:</strong> Support immigrant rights, challenge punitive policies, and advocate for humane economic reforms.
+      </div>
+    </section>
+    <section class="example" id="example18">
+      <h3>Example 18: Feeling Powerless About Gender Expectations</h3>
+      <table>
+        <tr>
+          <th>Step</th>
+          <th>Analysis</th>
+        </tr>
+        <tr>
+          <td>1.</td>
+          <td>I feel powerless because of restrictive gender roles.</td>
+        </tr>
+        <tr>
+          <td>2.</td>
+          <td>Why? Because society expects me to conform to certain behavior.</td>
+        </tr>
+        <tr>
+          <td>3.</td>
+          <td>Why? Because of deeply ingrained patriarchal norms.</td>
+        </tr>
+        <tr>
+          <td>4.</td>
+          <td>Why? Because social structures maintain power through gender hierarchies.</td>
+        </tr>
+        <tr>
+          <td>5.</td>
+          <td>Why? Because economic and political systems rely on gendered divisions of labor.</td>
+        </tr>
+      </table>
+      <div class="solution">
+        <strong>Solution:</strong> Promote gender equality, challenge patriarchal norms, and support economic justice.
+      </div>
+    </section>
+    <section class="example" id="example19">
+      <h3>Example 19: Feeling Frustrated About Lack of Affordable Housing</h3>
+      <table>
+        <tr>
+          <th>Step</th>
+          <th>Analysis</th>
+        </tr>
+        <tr>
+          <td>1.</td>
+          <td>I feel frustrated about not finding affordable housing.</td>
+        </tr>
+        <tr>
+          <td>2.</td>
+          <td>Why? Because rent prices are too high.</td>
+        </tr>
+        <tr>
+          <td>3.</td>
+          <td>Why? Because housing is treated like an investment commodity.</td>
+        </tr>
+        <tr>
+          <td>4.</td>
+          <td>Why? Because real estate markets are dominated by profit-seeking corporations.</td>
+        </tr>
+        <tr>
+          <td>5.</td>
+          <td>Why? Because capitalism commodifies basic human needs.</td>
+        </tr>
+      </table>
+      <div class="solution">
+        <strong>Solution:</strong> Support housing as a right, enforce rent controls, and challenge housing commodification.
+      </div>
+    </section>
+    <section class="example" id="example20">
+      <h3>Example 20: Feeling Pessimistic About Political Participation</h3>
+      <table>
+        <tr>
+          <th>Step</th>
+          <th>Analysis</th>
+        </tr>
+        <tr>
+          <td>1.</td>
+          <td>I feel pessimistic about voting and political participation.</td>
+        </tr>
+        <tr>
+          <td>2.</td>
+          <td>Why? Because I think my vote doesn’t make a difference.</td>
+        </tr>
+        <tr>
+          <td>3.</td>
+          <td>Why? Because political systems are influenced by corporate interests.</td>
+        </tr>
+        <tr>
+          <td>4.</td>
+          <td>Why? Because wealth and power control policy-making.</td>
+        </tr>
+        <tr>
+          <td>5.</td>
+          <td>Why? Because capitalism concentrates power among elites.</td>
+        </tr>
+      </table>
+      <div class="solution">
+        <strong>Solution:</strong> Support political reforms, promote grassroots democracy, and challenge corporate influence.
+      </div>
+    </section>
+    <footer> Created using principles of Critical Psychology to explore systemic roots of personal distress. </footer>
+  </body>
+</html>
